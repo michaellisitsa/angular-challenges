@@ -1,5 +1,5 @@
-import { NgFor } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { NgFor, NgTemplateOutlet } from '@angular/common';
+import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { randStudent, randTeacher } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { TeacherStore } from '../../data-access/teacher.store';
@@ -19,17 +19,17 @@ e.g.
     <app-card
       [list]="students"
       customClass="bg-light-green">
-      <app-img>
+      <card-img>
         <img src="assets/img/student.webp" width="200px" />
-      </app-img>
-      <app-list-item>
+      </card-img>
+      <card-list-item>
         <div class="border-grey-300 flex justify-between border px-2 py-1">
           Name
           <button (click)="delete(id)">
             <img class="h-5" src="assets/svg/trash.svg" />
           </button>
         </div>
-      </app-list-item>
+      </card-list-item>
     </app-card>
 
 And the delete is bound to the id of the item.
@@ -51,12 +51,9 @@ https://blog.angular-university.io/angular-ng-template-ng-container-ngtemplateou
       [class]="customClass">
       <ng-content select="[card-img]"></ng-content>
 
-      <section>
-        <app-list-item
-          *ngFor="let item of list"
-          [name]="item.firstName"
-          [id]="item.id"
-          [type]="type"></app-list-item>
+      <section *ngFor="let item of list">
+        <ng-container
+          *ngTemplateOutlet="listItem; context: { item: item }"></ng-container>
       </section>
 
       <button
@@ -66,12 +63,13 @@ https://blog.angular-university.io/angular-ng-template-ng-container-ngtemplateou
       </button>
     </div>
   `,
-  imports: [NgFor, ListItemComponent],
+  imports: [NgFor, ListItemComponent, NgTemplateOutlet],
 })
 export class CardComponent {
   @Input() list: any[] | null = null;
   @Input() type!: CardType;
   @Input() customClass = '';
+  @ContentChild('listItem') listItem!: TemplateRef<any>;
 
   CardType = CardType;
 

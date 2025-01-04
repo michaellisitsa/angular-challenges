@@ -10,6 +10,14 @@ import { CardComponent } from '../../ui/card/card.component';
   template: `
     <app-card [list]="teachers" [type]="cardType" customClass="bg-light-red">
       <img card-img src="assets/img/teacher.png" width="200px" />
+      <ng-template #listItem let-item="item">
+        <div class="border-grey-300 flex justify-between border px-2 py-1">
+          {{ item.firstName }}
+          <button>
+            <img class="h-5" src="assets/svg/trash.svg" />
+          </button>
+        </div>
+      </ng-template>
     </app-card>
   `,
   styles: [
